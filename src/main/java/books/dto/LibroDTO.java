@@ -1,12 +1,13 @@
 package books.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter @Setter
+
 public class LibroDTO {
-    private Long id;
-    private String titulo;
-    private List<String> autores; // o List<AutorDTO> si quieres más detalle
+
+
 }

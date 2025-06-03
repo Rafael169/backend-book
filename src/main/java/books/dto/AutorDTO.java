@@ -1,9 +1,10 @@
 package books.dto;
 
-import lombok.Data;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter @Getter
 public class AutorDTO {
-    private Long id;
-    private String nombre;
+
 }
