@@ -1,8 +1,8 @@
-# API de Gestión de Libros
+# API de Gestión Editorial y Biblioteca Digital
 
-## Descripción General
+## Contexto
 
-Esta API REST, desarrollada con Spring Boot, tiene como objetivo gestionar un sistema de libros y sus relaciones con autores, editoriales y categorías. La API implementa relaciones complejas en la base de datos utilizando JPA: ManyToMany, OneToOne y OneToMany. Además, se utiliza un patrón DTO (Data Transfer Object) para desacoplar las entidades del modelo de presentación y controlar qué datos son visibles en cada respuesta.
+Una editorial digital requiere una API para administrar su catálogo de libros, autores y colecciones especiales. El objetivo es facilitar la gestión de información de libros y sus autores, controlar las colecciones temáticas y mantener datos específicos que permitan realizar análisis y reportes internos.
 
 ---
 
@@ -11,105 +11,73 @@ Esta API REST, desarrollada con Spring Boot, tiene como objetivo gestionar un si
 ### Libro
 
 - **Relaciones:**
-  - Muchos a muchos (ManyToMany) con `Autor` (un libro puede tener varios autores y un autor puede escribir varios libros).
-  - Muchos a uno (ManyToOne) con `Editorial` (una editorial puede publicar varios libros, pero un libro tiene una única editorial).
-  - Uno a uno (OneToOne) con `DetalleLibro` (para almacenar información adicional detallada).
+  - **ManyToMany** con `Autor`: Un libro puede tener múltiples autores y un autor puede estar vinculado a varios libros.
+  - **OneToOne** con `Portada`: Cada libro tiene una portada con información específica (imagen, formato, tamaño).
+  - **ManyToOne** con `Coleccion`: Cada libro pertenece a una colección temática (una colección puede tener muchos libros).
 
 - **Atributos:**
-  - `id` (Long) - Identificador único.
-  - `titulo` (String) - Título del libro.
-  - `isbn` (String) - Código ISBN.
-  - `fechaPublicacion` (Date) - Fecha de publicación.
-  - `numeroPaginas` (int) - Número total de páginas.
-  - `idioma` (String) - Idioma en que está escrito.
-  - `precio` (BigDecimal) - Precio del libro.
-  - `activo` (boolean) - Estado del libro (disponible o no).
-  
+  - `id` (Long)
+  - `titulo` (String)
+  - `sinopsis` (String)
+  - `isbn` (String)
+  - `fechaPublicacion` (Date)
+  - `precio` (BigDecimal)
+  - `idioma` (String)
+  - `disponible` (boolean)
+
 ### Autor
 
 - **Relaciones:**
-  - Muchos a muchos (ManyToMany) con `Libro`.
+  - **ManyToMany** con `Libro`
 
 - **Atributos:**
-  - `id` (Long) - Identificador único.
-  - `nombre` (String) - Nombre completo del autor.
-  - `nacionalidad` (String) - País de origen.
-  - `fechaNacimiento` (Date) - Fecha de nacimiento.
-  - `biografia` (String) - Breve biografía.
-  - `email` (String) - Contacto del autor.
+  - `id` (Long)
+  - `nombreCompleto` (String)
+  - `fechaNacimiento` (Date)
+  - `nacionalidad` (String)
+  - `email` (String)
+  - `biografia` (String)
 
-### Editorial
+### Coleccion
 
 - **Relaciones:**
-  - Uno a muchos (OneToMany) con `Libro`.
+  - **OneToMany** con `Libro`
 
 - **Atributos:**
-  - `id` (Long) - Identificador único.
-  - `nombre` (String) - Nombre de la editorial.
-  - `direccion` (String) - Dirección física.
-  - `telefono` (String) - Teléfono de contacto.
-  - `email` (String) - Correo electrónico.
-  - `paginaWeb` (String) - URL del sitio web.
+  - `id` (Long)
+  - `nombre` (String)
+  - `descripcion` (String)
+  - `fechaCreacion` (Date)
+  - `activo` (boolean)
 
-### DetalleLibro
+### Portada
 
 - **Relaciones:**
-  - Uno a uno (OneToOne) con `Libro`.
+  - **OneToOne** con `Libro`
 
 - **Atributos:**
-  - `id` (Long) - Identificador único.
-  - `sinopsis` (String) - Resumen del contenido.
-  - `formato` (String) - Formato (digital, papel).
-  - `peso` (Double) - Peso en gramos.
-  - `dimensiones` (String) - Dimensiones físicas.
-  - `fechaCreacion` (Date) - Fecha de creación del detalle.
-  - `idiomaOriginal` (String) - Idioma original del libro.
+  - `id` (Long)
+  - `urlImagen` (String)
+  - `formato` (String)
+  - `pesoKb` (Integer)
+  - `descripcion` (String)
 
 ---
 
-## Requerimientos Funcionales
+## Requerimientos
 
-- CRUD completo para `Libro`, `Autor`, `Editorial` y `DetalleLibro`.
-- Capacidad para asociar y disociar autores a libros.
-- Consultar libros por editorial, autor o idioma.
-- Utilizar DTOs para limitar la exposición de atributos sensibles o irrelevantes en la respuesta de la API (por ejemplo, no mostrar email del autor en las respuestas públicas).
-- Documentar la API usando Swagger/OpenAPI.
-
----
-
-## Consideraciones Técnicas
-
-- Utilizar Spring Boot con JPA/Hibernate para la persistencia.
-- Configurar relaciones bidireccionales donde sea necesario.
-- Implementar DTOs para separar la capa de persistencia de la presentación.
-- Manejar excepciones y validar datos de entrada.
-- Usar Lombok para reducir código boilerplate (opcional).
-- Seguridad no requerida para esta versión inicial, pero dejar la puerta abierta para futuras integraciones.
+- CRUD para todas las entidades.
+- Control estricto sobre qué atributos exponer en la API pública mediante DTOs (por ejemplo, ocultar el email del autor o el peso de la portada en respuestas públicas).
+- Posibilidad de asignar y remover autores a libros.
+- Consulta de libros filtrados por colección, idioma o disponibilidad.
+- Soporte para agregar o modificar la portada de un libro.
+- Mantener registros históricos de colecciones activas e inactivas.
 
 ---
 
-## Endpoints Sugeridos (Ejemplos)
+## Objetivos
 
-- `GET /api/libros` - Listar todos los libros (DTO limitado).
-- `POST /api/libros` - Crear un libro nuevo.
-- `PUT /api/libros/{id}` - Actualizar libro.
-- `DELETE /api/libros/{id}` - Eliminar libro.
-- `GET /api/libros/{id}` - Obtener detalle completo de un libro, incluyendo autores y editorial.
-- `GET /api/autores/{id}/libros` - Listar libros de un autor.
-- `GET /api/editoriales/{id}/libros` - Listar libros de una editorial.
+- Practicar el modelado de relaciones complejas JPA.
+- Implementar DTOs para gestionar la visibilidad de datos en la API.
+- Garantizar un diseño claro y modular que facilite futuras ampliaciones y mantenibilidad.
 
----
-
-## Ejemplo de DTO
-
-```java
-public class LibroDTO {
-    private Long id;
-    private String titulo;
-    private String isbn;
-    private Date fechaPublicacion;
-    private String idioma;
-    private BigDecimal precio;
-    private List<String> nombresAutores; // Solo nombres para no exponer datos sensibles
-    private String nombreEditorial;
-}
