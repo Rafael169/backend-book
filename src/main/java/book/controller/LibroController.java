@@ -33,4 +33,11 @@ public class LibroController {
         public void eliminarLibro(@PathVariable Long id) {
             libSer.eliminarLibro(id);
         }
+
+        @PutMapping("/editar")
+        public void editarLibro(@RequestBody LibroDTO dto) {
+            libSer.actualizarLibro(dto);
+        }
+
+
 }
