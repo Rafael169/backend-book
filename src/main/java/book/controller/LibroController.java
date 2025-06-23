@@ -2,6 +2,7 @@ package book.controller;
 
 import book.dto.LibroDTO;
 import book.service.ILibroService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class LibroController {
     }
 
     @PostMapping("/guardar")
-    public ResponseEntity<String> guardarLibro(@RequestBody LibroDTO dto) {
+    public ResponseEntity<String> guardarLibro(@Valid @RequestBody LibroDTO dto) {
         try {
             libSer.guardarLibro(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body("Libro guardado exitosamente.");

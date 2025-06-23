@@ -1,6 +1,8 @@
 package book.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
@@ -11,9 +13,17 @@ public class Libro {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "libro_seq")
     @SequenceGenerator(name = "libro_seq", sequenceName = "libro_sequence", allocationSize = 1)
     private Long id;
+
+    @NotBlank(message = "El título no puede estar vacío")
     private String titulo;
+
+    @NotBlank(message = "El autor no puede estar vacío")
     private String autor;
+
+    @NotNull(message = "El precio es obligatorio")
     private Double precio;
+
+    @NotNull(message = "El stock es obligatorio")
     private Integer stock;
 
     public Libro() {
