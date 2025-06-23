@@ -16,7 +16,7 @@ public class LibroController {
     @Autowired
     private ILibroService libSer;
 
-    @GetMapping("/traer")
+    @GetMapping
     public ResponseEntity<List<LibroDTO>> getTodosLosLibros() {
         try {
             List<LibroDTO> libros = libSer.listarLibros();
