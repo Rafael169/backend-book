@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LibroRepository extends JpaRepository<Libro, Long> {
+    // 2°- Implemento los metodos del CRUD con JPA Repository
 }
